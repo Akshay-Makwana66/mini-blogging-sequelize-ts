@@ -1,10 +1,14 @@
-import { Sequelize, DataTypes,Model } from 'sequelize';
+import {config} from "dotenv";
+config();
+import { Sequelize, DataTypes } from 'sequelize';
+import Blog from './blogModel';
+import User from './userModel';
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('minisequelize', 'akshay makwana', 'akki66', {
-  host: 'localhost',
-  // logging: false,
-  dialect:  'mysql',
+const sequelize = new Sequelize(`${process.env.DATABASE_NAME}`, `${process.env.USER_NAME}`, `${process.env.DATABASE_PASSWORD}`, {
+  dialect: "mysql",
+  host: `${process.env.DATABASE_HOST}`,
+  logging: false,
 });
 
 try {
@@ -25,12 +29,11 @@ try {
   const db: DB = {
     Sequelize,
     sequelize,
+    blog: Blog(sequelize, DataTypes),
+    user: User(sequelize, DataTypes),
   };
   
-  (async () => {
-    db.blog = require('./blogModel')(sequelize, DataTypes);
-    db.user = require('./userModel')(sequelize, DataTypes);
-  
+  (async () => {  
     await db.sequelize.sync({ force: false });
   })();
  

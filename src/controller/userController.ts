@@ -23,28 +23,16 @@ const userSignup = async (req:Request, res:Response) => {
         let userEmail= data.email    
         let userPassword= data.password
 
-        // let checkCred= await User.findOne({email: userEmail})
         const checkCred = await User.findOne({ where: { email:userEmail } });
-        // if(!checkCred) return res.status(401).send({status:false, msg:"Email is incorrect"})
-        // let decryptPassword =  bcrypt.compare(userPassword, checkCred.password);
-
-        // if (!decryptPassword) {  
-        // return res.status(401).send({ status: false, message: "Password is not correct" });
-        // }
-
+       
         // If the user is not found or the password is incorrect, send an error response
-if (!checkCred || !(await bcrypt.compare(userPassword, checkCred.password))) {
-return res.status(401).json({ error: 'Invalid credentials' });
-}
+        if (!checkCred || !(await bcrypt.compare(userPassword, checkCred.password))) {
+        return res.status(401).json({ message: 'Email or Password is incorrect' });
+        }
 
-        // //Creating token if E-mailId and password is correct -
-        // let token= jwt.sign({
-        // userId: checkCred._id.toString(),
-        // }, "sequelize");
-        // //Sending token in response body
         // Generate a JWT token for authentication
-        const token = jwt.sign({ userId: checkCred.userId }, 'sequelize', { expiresIn: '1h' });
-         res.status(201).send({message:'You Successfully LoggedIn',data: token})
+        const token = jwt.sign({ userId: checkCred.userId }, SECRET_KEY, { expiresIn: '1h' });
+         res.status(201).send({message:'You are Successfully LoggedIn',data: token})
 
     } catch (err:any) {
       return res.status(500).json({ status: false, message: err.message});

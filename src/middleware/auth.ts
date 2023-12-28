@@ -1,15 +1,15 @@
 import { NextFunction, Request,Response } from "express";
-import jwt,{VerifyErrors,JwtPayload} from 'jsonwebtoken'
+import jwt,{JwtPayload} from 'jsonwebtoken'
 import db from "../models/index";
 const Blog = db.blog;
 const SECRET_KEY="blogs";
 interface DecodedToken {
-    userId: string;
+    userId: number;
     // Add other properties from your decoded token if needed
   }
   
   interface AuthenticatedRequest extends Request {
-    userId?: string;
+    userId?: number;
   }
   
   const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -27,14 +27,13 @@ interface DecodedToken {
       }
       next();
     } catch (error:any) {
+      console.log(error);
+      
       res.status(500).send({ status: false, msg: error.message });
     }
   };
   
-// Extending the Request type to include a userId property
-interface AuthorizedRequest extends Request {
-    userId?: number; // Adjust the type to match your userId data type
-  }
+
 const authorization = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
     try {
   

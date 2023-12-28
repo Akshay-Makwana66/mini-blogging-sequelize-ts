@@ -19,7 +19,7 @@ const Blog = (sequelize:any, DataTypes:any) => {
       tags: {
         type: DataTypes.STRING,
       },
-      category: {
+      category: {   
         type: DataTypes.STRING,
         allowNull: false,
       },

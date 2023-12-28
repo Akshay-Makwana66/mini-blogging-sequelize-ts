@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction } from "express";
 interface ExtendedRequest extends Request {
-    userId?: string; // Modify the type to match your userId data type
+    userId?: number; // Modify the type to match your userId data type
   }
 const createBlogsValidations = async  (req:ExtendedRequest,res:Response,next:NextFunction)=> {
     try {
@@ -21,6 +21,8 @@ const createBlogsValidations = async  (req:ExtendedRequest,res:Response,next:Nex
   
       // we are assigning UserId of decoded token 
       data.userId= req.userId;  
+
+      
       // const [rows] = await connection.promise().query('SELECT * FROM users WHERE UserId = ?', [req.UserId]);
       //   console.log(rows);
       
